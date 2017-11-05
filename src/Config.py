@@ -3,8 +3,13 @@ import sys
 import os
 import locale
 import re
-import ConfigParser
-
+try:
+    import ConfigParser #py2: built-in
+except Exception as err:
+    try:
+        import configparser as ConfigParser #py3: pip configparser
+    except Exception as err:
+        raise Exception("ERROR: 'configparser' module is missing and is required since python3")
 
 class Config(object):
 
