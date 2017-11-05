@@ -249,7 +249,7 @@ class FileRequest(object):
 
             return {"bytes_sent": bytes_sent, "file_size": file_size, "location": params["location"]}
 
-        except RequestError, err:
+        except RequestError as err:
             self.log.debug("GetFile %s %s request error: %s" % (self.connection, params["inner_path"], Debug.formatException(err)))
             self.response({"error": "File read error: %s" % err})
         except Exception as err:

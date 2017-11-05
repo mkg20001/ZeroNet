@@ -1,5 +1,8 @@
 import logging
-import urllib2
+try:
+    import urllib2
+except Exception as err:
+    import urllib as urllib2
 import re
 import time
 import socket
@@ -9,7 +12,7 @@ import gevent
 
 import util
 from Config import config
-from FileRequest import FileRequest
+from File.FileRequest import FileRequest
 from Site import SiteManager
 from Debug import Debug
 from Connection import ConnectionServer
@@ -352,6 +355,6 @@ class FileServer(ConnectionServer):
             try:
                 UpnpPunch.ask_to_close_port(self.port, protos=["TCP"])
                 self.log.info('Closed port via upnp.')
-            except (UpnpPunch.UpnpError, UpnpPunch.IGDError), err:
+            except (UpnpPunch.UpnpError, UpnpPunch.IGDError) as err:
                 self.log.info("Failed at attempt to use upnp to close port: %s" % err)
         ConnectionServer.stop(self)

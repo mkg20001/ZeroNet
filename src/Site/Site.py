@@ -8,9 +8,10 @@ import random
 import sys
 import struct
 import socket
-import urllib
-import urllib2
-
+try:
+    import urllib2
+except Exception as err:
+    import urllib as urllib2
 import gevent
 import gevent.pool
 
