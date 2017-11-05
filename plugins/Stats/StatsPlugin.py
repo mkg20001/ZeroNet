@@ -441,7 +441,7 @@ class UiRequestPlugin(object):
             output("- %s" % name)
             try:
                 yield 1
-            except Exception, err:
+            except Exception as err:
                 output("<br><b>! Error: %s</b><br>" % err)
             taken = time.time() - s
             if taken > 0:

@@ -52,7 +52,7 @@ class UiWebsocket(object):
             else:
                 try:
                     self.addHomepageNotifications()
-                except Exception, err:
+                except Exception as err:
                     self.log.error("Uncaught Exception: " + Debug.formatException(err))
 
         for notification in self.site.notifications:  # Send pending notification messages
@@ -70,14 +70,14 @@ class UiWebsocket(object):
                     break
                 else:
                     message = ws.receive()
-            except Exception, err:
+            except Exception as err:
                 self.log.error("WebSocket receive error: %s" % Debug.formatException(err))
                 break
 
             if message:
                 try:
                     self.handleRequest(message)
-                except Exception, err:
+                except Exception as err:
                     if config.debug:  # Allow websocket errors to appear on /Debug
                         sys.modules["main"].DebugHook.handleError()
                     self.log.error("WebSocket handleRequest error: %s \n %s" % (Debug.formatException(err), message))
@@ -196,7 +196,7 @@ class UiWebsocket(object):
                 message = self.send_queue.pop(0)
                 self.ws.send(json.dumps(message))
                 self.sending = False
-        except Exception, err:
+        except Exception as err:
             self.log.debug("Websocket send error: %s" % Debug.formatException(err))
 
     def getPermissions(self, req_id):
@@ -212,7 +212,7 @@ class UiWebsocket(object):
                 result = func(*args, **kwargs)
                 if result:
                     self.response(args[0], result)
-            except Exception, err:
+            except Exception as err:
                 if config.debug:  # Allow websocket errors to appear on /Debug
                     sys.modules["main"].DebugHook.handleError()
                 self.log.error("WebSocket handleRequest error: %s" % Debug.formatException(err))
@@ -385,7 +385,7 @@ class UiWebsocket(object):
         # Sign using private key sent by user
         try:
             signed = site.content_manager.sign(inner_path, privatekey, extend=extend, update_changed_files=update_changed_files, remove_missing_optional=remove_missing_optional)
-        except Exception, err:
+        except Exception as err:
             self.cmd("notification", ["error", _["Content signing failed"] + "<br><small>%s</small>" % err])
             self.response(to, {"error": "Site sign failed: %s" % err})
             self.log.error("Site sign failed: %s: %s" % (inner_path, Debug.formatException(err)))
@@ -517,7 +517,7 @@ class UiWebsocket(object):
                     shutil.copyfileobj(f_old, f_new)
 
             self.site.storage.write(inner_path, content)
-        except Exception, err:
+        except Exception as err:
             self.log.error("File write error: %s" % Debug.formatException(err))
             return self.response(to, {"error": "Write error: %s" % Debug.formatException(err)})
 
@@ -551,7 +551,7 @@ class UiWebsocket(object):
 
         try:
             self.site.storage.delete(inner_path)
-        except Exception, err:
+        except Exception as err:
             self.log.error("File delete error: Exception - %s" % err)
             return self.response(to, {"error": "Delete error: %s" % err})
 
@@ -587,7 +587,7 @@ class UiWebsocket(object):
             if not query.strip().upper().startswith("SELECT"):
                 raise Exception("Only SELECT query supported")
             res = self.site.storage.query(query, params)
-        except Exception, err:  # Response the error to client
+        except Exception as err:  # Response the error to client
             self.log.error("DbQuery error: %s" % err)
             return self.response(to, {"error": str(err)})
         # Convert result to dict
@@ -604,7 +604,7 @@ class UiWebsocket(object):
                 with gevent.Timeout(timeout):
                     self.site.needFile(inner_path, priority=6)
             body = self.site.storage.read(inner_path, "rb")
-        except Exception, err:
+        except Exception as err:
             self.log.error("%s fileGet error: %s" % (inner_path, err))
             body = None
         if body and format == "base64":
@@ -616,7 +616,7 @@ class UiWebsocket(object):
         try:
             with gevent.Timeout(timeout):
                 self.site.needFile(inner_path, priority=6)
-        except Exception, err:
+        except Exception as err:
             return self.response(to, {"error": str(err)})
         return self.response(to, "ok")
 
@@ -653,7 +653,7 @@ class UiWebsocket(object):
                 )
             else:
                 self.response(to, "Not changed")
-        except Exception, err:
+        except Exception as err:
             self.log.error("CertAdd error: Exception - %s" % err.message)
             self.response(to, {"error": err.message})
 

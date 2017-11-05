@@ -111,7 +111,7 @@ class UiWebsocketPlugin(object):
 
                     search_like = "%" + search.replace(" ", "%") + "%"
                     res = site.storage.query(str(db_query), [search_like, search_like])
-                except Exception, err:
+                except Exception as err:
                     self.log.error("%s feed query %s error: %s" % (address, name, err))
                     continue
                 for row in res:

@@ -73,7 +73,7 @@ class ConnectionServer:
         )
         try:
             self.stream_server.serve_forever()  # Start normal connection server
-        except Exception, err:
+        except Exception as err:
             self.log.info("StreamServer bind error, must be running already: %s" % err)
 
     def stop(self):
@@ -147,7 +147,7 @@ class ConnectionServer:
                     connection.close("Connection event return error")
                     raise Exception("Connection event return error")
 
-            except Exception, err:
+            except Exception as err:
                 connection.close("%s Connect error: %s" % (ip, Debug.formatException(err)))
                 raise err
             return connection

@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 # Pure ctypes windows taskbar notification icon
 # via https://gist.github.com/jasonbot/5759510
 # Modified for ZeroNet
@@ -415,7 +417,7 @@ WM_QUERYNEWPALETTE        = 0x030F
 WM_PALETTEISCHANGING      = 0x0310
 WM_PALETTECHANGED         = 0x0311
 WM_HOTKEY                 = 0x0312
-WM_PRINT                  = 0x0317
+WM_print(                 = 0x0317)
 WM_PRINTCLIENT            = 0x0318
 WM_HANDHELDFIRST          = 0x0358
 WM_HANDHELDLAST           = 0x035F
@@ -562,11 +564,11 @@ class NotificationIcon(object):
                 ret = GetMessage(ctypes.pointer(message), 0, 0, 0)
                 TranslateMessage(ctypes.pointer(message))
                 DispatchMessage(ctypes.pointer(message))
-            except Exception, err:
-                # print "NotificationIcon error", err, message
+            except Exception as err:
+                # print("NotificationIcon error", err, message)
                 message = MSG()
             time.sleep(0.125)
-        print "Icon thread stopped, removing icon..."
+        print("Icon thread stopped, removing icon...")
 
         Shell_NotifyIcon(NIM_DELETE, ctypes.cast(ctypes.pointer(iconinfo), ctypes.POINTER(NOTIFYICONDATA)))
         ctypes.windll.user32.DestroyWindow(self._hwnd)
@@ -660,8 +662,8 @@ class NotificationIcon(object):
         time.sleep(0.2)
         try:
             Shell_NotifyIcon(NIM_DELETE, self.iconinfo)
-        except Exception, err:
-            print "Icon remove error", err
+        except Exception as err:
+            print("Icon remove error", err)
         ctypes.windll.user32.DestroyWindow(self._hwnd)
         ctypes.windll.user32.DestroyIcon(self._hicon)
 
@@ -693,7 +695,7 @@ if __name__ == "__main__":
 
     def greet():
         ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
-        print "Hello"
+        print("Hello")
 
     def quit():
         ni._die = True
@@ -724,6 +726,6 @@ if __name__ == "__main__":
 
     @atexit.register
     def goodbye():
-        print "You are now leaving the Python sector."
+        print("You are now leaving the Python sector.")
 
     ni._run()

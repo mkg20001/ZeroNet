@@ -15,7 +15,7 @@ class ContentDb(Db):
         try:
             self.schema = self.getSchema()
             self.checkTables()
-        except Exception, err:
+        except Exception as err:
             self.log.error("Error loading content.db: %s, rebuilding..." % Debug.formatException(err))
             self.close()
             os.unlink(path)  # Remove and try again

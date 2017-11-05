@@ -140,7 +140,7 @@ class Connection(object):
                     self.sock = CryptConnection.manager.wrapSocket(self.sock, "tls-rsa", True)
                     self.sock_wrapped = True
                     self.crypt = "tls-rsa"
-            except Exception, err:
+            except Exception as err:
                 self.log("Socket peek error: %s" % Debug.formatException(err))
         self.messageLoop()
 
@@ -197,7 +197,7 @@ class Connection(object):
                         raise Exception("Invalid message type: %s" % type(message))
 
                 message = None
-        except Exception, err:
+        except Exception as err:
             if not self.closed:
                 self.log("Socket error: %s" % Debug.formatException(err))
         self.close("MessageLoop ended")  # MessageLoop ended, close connection
@@ -208,7 +208,7 @@ class Connection(object):
         read_bytes = message["stream_bytes"]  # Bytes left we have to read from socket
         try:
             buff = self.unpacker.read_bytes(min(16 * 1024, read_bytes))  # Check if the unpacker has something left in buffer
-        except Exception, err:
+        except Exception as err:
             buff = ""
         file = self.waiting_streams[message["to"]]
         if buff:
@@ -234,7 +234,7 @@ class Connection(object):
                 self.incomplete_buff_recv += 1
                 self.bytes_recv += buff_len
                 self.server.bytes_recv += buff_len
-        except Exception, err:
+        except Exception as err:
             self.log("Stream read error: %s" % Debug.formatException(err))
 
         if config.debug_socket:
@@ -371,7 +371,7 @@ class Connection(object):
             try:
                 self.sock = CryptConnection.manager.wrapSocket(self.sock, self.crypt, server, cert_pin=self.cert_pin)
                 self.sock_wrapped = True
-            except Exception, err:
+            except Exception as err:
                 self.log("Crypt connection error: %s, adding peerid %s as broken ssl." % (err, message["params"]["peer_id"]))
                 self.server.broken_ssl_peer_ids[message["params"]["peer_id"]] = True
                 self.close("Broken ssl")
@@ -414,7 +414,7 @@ class Connection(object):
                 message = None
                 with self.send_lock:
                     self.sock.sendall(data)
-        except Exception, err:
+        except Exception as err:
             self.close("Send error: %s" % err)
             return False
         self.last_sent_time = time.time()
@@ -465,7 +465,7 @@ class Connection(object):
         with gevent.Timeout(10.0, False):
             try:
                 response = self.request("ping")
-            except Exception, err:
+            except Exception as err:
                 self.log("Ping error: %s" % Debug.formatException(err))
         if response and "body" in response and response["body"] == "Pong!":
             self.last_ping_delay = time.time() - s
@@ -496,7 +496,7 @@ class Connection(object):
             if self.sock:
                 self.sock.shutdown(gevent.socket.SHUT_WR)
                 self.sock.close()
-        except Exception, err:
+        except Exception as err:
             if config.debug_socket:
                 self.log("Close error: %s" % err)
 

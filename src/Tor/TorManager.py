@@ -60,7 +60,7 @@ class TorManager(object):
             try:
                 assert self.connect(), "No connection"
                 self.log.debug("Tor proxy port %s check ok" % config.tor_proxy)
-            except Exception, err:
+            except Exception as err:
                 self.log.info("Starting self-bundled Tor, due to Tor proxy port %s check error: %s" % (config.tor_proxy, err))
                 self.enabled = False
                 # Change to self-bundled Tor ports
@@ -91,7 +91,7 @@ class TorManager(object):
                         break
                 # Terminate on exit
                 atexit.register(self.stopTor)
-            except Exception, err:
+            except Exception as err:
                 self.log.error("Error starting Tor client: %s" % Debug.formatException(err))
                 self.enabled = False
         return False
@@ -100,7 +100,7 @@ class TorManager(object):
         self.log.debug("Stopping...")
         try:
             self.tor_process.terminate()
-        except Exception, err:
+        except Exception as err:
             self.log.error("Error stopping Tor: %s" % err)
 
     def downloadTor(self):
@@ -185,7 +185,7 @@ class TorManager(object):
 
                 self.status = u"Connected (%s)" % res_auth
                 self.conn = conn
-        except Exception, err:
+        except Exception as err:
             self.conn = None
             self.status = u"Error (%s)" % err
             self.log.error("Tor controller connect error: %s" % Debug.formatException(err))
@@ -266,7 +266,7 @@ class TorManager(object):
                 while not back.endswith("250 OK\r\n"):
                     back += conn.recv(1024 * 64).decode("utf8", "ignore")
                 break
-            except Exception, err:
+            except Exception as err:
                 self.log.error("Tor send error: %s, reconnecting..." % err)
                 self.disconnect()
                 time.sleep(1)

@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import re
 import urllib2
 import httplib
@@ -343,10 +345,10 @@ if __name__ == "__main__":
     import time
 
     s = time.time()
-    print "Opening port..."
-    print ask_to_open_port(15443, "ZeroNet", retries=3, protos=["TCP"])
-    print "Done in", time.time()-s
+    print("Opening port...")
+    print(ask_to_open_port(15443, "ZeroNet", retries=3, protos=["TCP"]))
+    print("Done in", time.time()-s)
 
-    print "Closing port..."
-    print ask_to_close_port(15443, "ZeroNet", retries=3, protos=["TCP"])
-    print "Done in", time.time()-s
+    print("Closing port...")
+    print(ask_to_close_port(15443, "ZeroNet", retries=3, protos=["TCP"]))
+    print("Done in", time.time()-s)

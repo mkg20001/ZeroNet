@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import time
 import os
 
@@ -73,7 +75,7 @@ class ContentDbDict(dict):
         for key in dict.keys(self):
             try:
                 val = self[key]
-            except Exception, err:
+            except Exception as err:
                 self.log.warning("Error loading %s: %s" % (key, err))
                 continue
             yield key, val
@@ -83,7 +85,7 @@ class ContentDbDict(dict):
         for key in dict.keys(self):
             try:
                 val = self[key]
-            except Exception, err:
+            except Exception as err:
                 self.log.warning("Error loading %s: %s" % (key, err))
                 continue
             back.append((key, val))
@@ -116,12 +118,12 @@ if __name__ == "__main__":
     s_mem = process.memory_info()[0] / float(2 ** 20)
     root = "data-live/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27"
     contents = ContentDbDict("1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27", root)
-    print "Init len", len(contents)
+    print("Init len", len(contents))
 
     s = time.time()
     for dir_name in os.listdir(root + "/data/users/")[0:8000]:
         contents["data/users/%s/content.json" % dir_name]
-    print "Load: %.3fs" % (time.time() - s)
+    print("Load: %.3fs" % (time.time() - s))
 
     s = time.time()
     found = 0
@@ -129,16 +131,16 @@ if __name__ == "__main__":
         found += 1
         assert key
         assert val
-    print "Found:", found
-    print "Iteritem: %.3fs" % (time.time() - s)
+    print("Found:", found)
+    print("Iteritem: %.3fs" % (time.time() - s))
 
     s = time.time()
     found = 0
     for key in contents.keys():
         found += 1
         assert key in contents
-    print "In: %.3fs" % (time.time() - s)
+    print("In: %.3fs" % (time.time() - s))
 
-    print "Len:", len(contents.values()), len(contents.keys())
+    print("Len:", len(contents.values()), len(contents.keys()))
 
-    print "Mem: +", process.memory_info()[0] / float(2 ** 20) - s_mem
+    print("Mem: +", process.memory_info()[0] / float(2 ** 20) - s_mem)

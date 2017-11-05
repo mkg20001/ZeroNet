@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import sqlite3
 import json
 import time
@@ -254,7 +256,7 @@ class Db(object):
                     data = json.load(helper.limitedGzipFile(fileobj=file))
                 else:
                     data = json.load(file)
-        except Exception, err:
+        except Exception as err:
             self.log.debug("Json file %s load error: %s" % (file_path, err))
             data = {}
 
@@ -394,9 +396,9 @@ if __name__ == "__main__":
     for user_dir in os.listdir("data/users"):
         if os.path.isdir("data/users/%s" % user_dir):
             dbjson.updateJson("data/users/%s/data.json" % user_dir, cur=cur)
-            # print ".",
+            # print(".",)
     cur.logging = True
     cur.execute("COMMIT")
-    print "Done in %.3fs" % (time.time() - s)
+    print("Done in %.3fs" % (time.time() - s))
     for query, stats in sorted(dbjson.query_stats.items()):
-        print "-", query, stats
+        print("-", query, stats)

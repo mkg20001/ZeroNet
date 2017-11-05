@@ -96,5 +96,5 @@ class ContentDbPlugin(object):
         for site in self.sites.values():
             try:
                 self.savePeers(site)
-            except Exception, err:
+            except Exception as err:
                 site.log.error("Save peer error: %s" % err)

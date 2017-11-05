@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import gevent.pool
 
 
@@ -62,4 +64,4 @@ if __name__ == "__main__":
 
     s = time.time()
     gevent.joinall(threads)  # Should take 10 second
-    print time.time() - s
+    print(time.time() - s)

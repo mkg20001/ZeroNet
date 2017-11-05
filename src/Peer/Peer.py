@@ -85,7 +85,7 @@ class Peer(object):
                     self.connection = sys.modules["main"].file_server.getConnection(self.ip, self.port, site=self.site)
                 self.connection.sites += 1
 
-            except Exception, err:
+            except Exception as err:
                 self.onConnectionError("Getting connection error")
                 self.log("Getting connection error: %s (connection_error: %s, hash_failed: %s)" %
                          (Debug.formatException(err), self.connection_error, self.hash_failed))
@@ -145,7 +145,7 @@ class Peer(object):
                     return res
                 else:
                     raise Exception("Invalid response: %s" % res)
-            except Exception, err:
+            except Exception as err:
                 if type(err).__name__ == "Notify":  # Greenlet killed by worker
                     self.log("Peer worker got killed: %s, aborting cmd: %s" % (err.message, cmd))
                     break

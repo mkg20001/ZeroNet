@@ -138,7 +138,7 @@ class FileServer(ConnectionServer):
             data = urllib2.urlopen("https://portchecker.co/check", "port=%s" % port, timeout=20.0).read()
             message = re.match('.*<div id="results-wrapper">(.*?)</div>', data, re.DOTALL).group(1)
             message = re.sub("<.*?>", "", message.replace("<br>", " ").replace("&nbsp;", " ").strip())  # Strip http tags
-        except Exception, err:
+        except Exception as err:
             message = "Error: %s" % Debug.formatException(err)
             data = ""
 
@@ -172,7 +172,7 @@ class FileServer(ConnectionServer):
             data = urllib2.urlopen("http://www.canyouseeme.org/", "port=%s" % port, timeout=20.0).read()
             message = re.match('.*<p style="padding-left:15px">(.*?)</p>', data, re.DOTALL).group(1)
             message = re.sub("<.*?>", "", message.replace("<br>", " ").replace("&nbsp;", " "))  # Strip http tags
-        except Exception, err:
+        except Exception as err:
             message = "Error: %s" % Debug.formatException(err)
 
         if "Success" not in message:

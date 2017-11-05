@@ -1,9 +1,11 @@
+from __future__ import print_function
+
 ''' Get windows special folders without pythonwin
     Example:
             import specialfolders
             start_programs = specialfolders.get(specialfolders.PROGRAMS)
 
-Code is public domain, do with it what you will. 
+Code is public domain, do with it what you will.
 
 Luke Pinner - Environment.gov.au, 2010 February 10
 '''
@@ -49,5 +51,5 @@ def get(intFolder):
 
 if __name__ == "__main__":
 	import os
-	print get(STARTUP)
+	print(get(STARTUP))
 	open(get(STARTUP)+"\\zeronet.cmd", "w").write("cd /D %s\r\nzeronet.py" % os.getcwd())

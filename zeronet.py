@@ -1,5 +1,7 @@
 #!/usr/bin/env python2.7
 
+from __future__ import print_function
+
 # Included modules
 import os
 import sys
@@ -7,7 +9,7 @@ import sys
 
 def main():
     if "--silent" not in sys.argv:
-        print "- Starting ZeroNet..."
+        print("- Starting ZeroNet...")
 
     main = None
     try:
@@ -25,13 +27,13 @@ def main():
             try:
                 if "lib.opensslVerify" in sys.modules:
                     sys.modules["lib.opensslVerify"].opensslVerify.closeLibrary()
-            except Exception, err:
-                print "Error closing opensslVerify lib", err
+            except Exception as err:
+                print("Error closing opensslVerify lib", err)
             try:
                 if "lib.pyelliptic" in sys.modules:
                     sys.modules["lib.pyelliptic"].openssl.closeLibrary()
-            except Exception, err:
-                print "Error closing pyelliptic lib", err
+            except Exception as err:
+                print("Error closing pyelliptic lib", err)
 
             # Close lock file
             sys.modules["main"].lock.close()
@@ -39,8 +41,8 @@ def main():
             # Update
             try:
                 update.update()
-            except Exception, err:
-                print "Update error: %s" % err
+            except Exception as err:
+                print("Update error: %s" % err)
 
             # Close log files
             logger = sys.modules["main"].logging.getLogger()
@@ -52,13 +54,13 @@ def main():
 
             atexit._run_exitfuncs()
 
-    except Exception, err:  # Prevent closing
+    except Exception as err:  # Prevent closing
         import traceback
         try:
             import logging
             logging.exception("Unhandled exception: %s" % err)
-        except Exception, log_err:
-            print "Failed to log error:", log_err
+        except Exception as log_err:
+            print("Failed to log error:", log_err)
             traceback.print_exc()
         from Config import config
         traceback.print_exc(file=open(config.log_dir + "/error.log", "a"))
@@ -66,7 +68,7 @@ def main():
     if main and main.update_after_shutdown:  # Updater
         # Restart
         gc.collect()  # Garbage collect
-        print "Restarting..."
+        print("Restarting...")
         import time
         time.sleep(1)  # Wait files to close
         args = sys.argv[:]
@@ -80,11 +82,11 @@ def main():
             args = ['"%s"' % arg for arg in args]
 
         try:
-            print "Executing %s %s" % (sys.executable, args)
+            print("Executing %s %s" % (sys.executable, args))
             os.execv(sys.executable, args)
-        except Exception, err:
-            print "Execv error: %s" % err
-        print "Bye."
+        except Exception as err:
+            print("Execv error: %s" % err)
+        print("Bye.")
 
 
 if __name__ == '__main__':

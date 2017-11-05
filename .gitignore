@@ -28,3 +28,7 @@ tools/phantomjs
 
 # ZeroNet config file
 zeronet.conf
+
+# Bakup files
+*.bak
+*~

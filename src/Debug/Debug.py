@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import sys
 import os
 from Config import config
@@ -64,10 +66,10 @@ if config.debug_gevent:
 
 if __name__ == "__main__":
     try:
-        print 1 / 0
-    except Exception, err:
-        print type(err).__name__
-        print "1/0 error: %s" % formatException(err)
+        print(1 / 0)
+    except Exception as err:
+        print(type(err).__name__)
+        print("1/0 error: %s" % formatException(err))
 
     def loadJson():
         json.loads("Errr")
@@ -75,13 +77,13 @@ if __name__ == "__main__":
     import json
     try:
         loadJson()
-    except Exception, err:
-        print err
-        print "Json load error: %s" % formatException(err)
+    except Exception as err:
+        print(err)
+        print("Json load error: %s" % formatException(err))
 
     try:
         raise Notify("nothing...")
-    except Exception, err:
-        print "Notify: %s" % formatException(err)
+    except Exception as err:
+        print("Notify: %s" % formatException(err))
 
     loadJson()

@@ -24,7 +24,7 @@ def atomicWrite(dest, content, mode="w"):
         os.rename(dest + "-tmpnew", dest)
         os.unlink(dest + "-tmpold")
         return True
-    except Exception, err:
+    except Exception as err:
         from Debug import Debug
         logging.error(
             "File %s write failed: %s, reverting..." %
@@ -62,7 +62,7 @@ def getFreeSpace():
                 ctypes.c_wchar_p(config.data_dir), None, None, ctypes.pointer(free_space_pointer)
             )
             free_space = free_space_pointer.value
-        except Exception, err:
+        except Exception as err:
             logging.error("GetFreeSpace error: %s" % err)
     return free_space
 

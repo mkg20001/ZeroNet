@@ -597,7 +597,7 @@ class UiRequest(object):
             if site:  # Correct wrapper key
                 try:
                     user = self.getCurrentUser()
-                except Exception, err:
+                except Exception as err:
                     self.log.error("Error in data/user.json: %s" % err)
                     return self.error500()
                 if not user:
@@ -706,4 +706,3 @@ class UiRequest(object):
                 <h1>%s</h1>
                 <h2>%s</h3>
             """ % (title, cgi.escape(message))
-

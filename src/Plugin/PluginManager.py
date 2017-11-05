@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import logging
 import os
 import sys
@@ -38,7 +40,7 @@ class PluginManager:
             self.log.debug("Loading plugin: %s" % dir_name)
             try:
                 __import__(dir_name)
-            except Exception, err:
+            except Exception as err:
                 self.log.error("Plugin %s load error: %s" % (dir_name, Debug.formatException(err)))
             if dir_name not in self.plugin_names:
                 self.plugin_names.append(dir_name)
@@ -62,7 +64,7 @@ class PluginManager:
                 else:
                     try:
                         reload(module)
-                    except Exception, err:
+                    except Exception as err:
                         self.log.error("Plugin %s reload error: %s" % (module_name, Debug.formatException(err)))
 
         self.loadPlugins()  # Load new plugins
@@ -169,4 +171,4 @@ if __name__ == "__main__":
             else:
                 return "Can't route to", path
 
-    print Request().route("MainPage")
+    print(Request().route("MainPage"))

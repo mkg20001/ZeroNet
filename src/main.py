@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 # Included modules
 import os
 import sys
@@ -33,14 +35,14 @@ if not os.path.isdir(config.log_dir):
     try:
         os.chmod(config.log_dir, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
     except Exception as err:
-        print "Can't change permission of %s: %s" % (config.log_dir, err)
+        print("Can't change permission of %s: %s" % (config.log_dir, err))
 
 if not os.path.isdir(config.data_dir):
     os.mkdir(config.data_dir)
     try:
         os.chmod(config.data_dir, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
     except Exception as err:
-        print "Can't change permission of %s: %s" % (config.data_dir, err)
+        print("Can't change permission of %s: %s" % (config.data_dir, err))
 
 if not os.path.isfile("%s/sites.json" % config.data_dir):
     open("%s/sites.json" % config.data_dir, "w").write("{}")
@@ -55,9 +57,9 @@ if config.action == "main":
         lock = helper.openLocked("%s/lock.pid" % config.data_dir, "w")
         lock.write("%s" % os.getpid())
     except IOError as err:
-        print "Can't open lock file, your ZeroNet client is probably already running, exiting... (%s)" % err
+        print("Can't open lock file, your ZeroNet client is probably already running, exiting... (%s)" % err)
         if config.open_browser:
-            print "Opening browser: %s...", config.open_browser
+            print("Opening browser: %s...", config.open_browser)
             import webbrowser
             if config.open_browser == "default_browser":
                 browser = webbrowser.get()
@@ -229,7 +231,7 @@ class Actions(object):
         diffs = site.content_manager.getDiffs(inner_path)
         try:
             succ = site.content_manager.sign(inner_path=inner_path, privatekey=privatekey, update_changed_files=True, remove_missing_optional=remove_missing_optional)
-        except Exception, err:
+        except Exception as err:
             logging.error("Sign error: %s" % Debug.formatException(err))
             succ = False
         if succ and publish:
@@ -253,7 +255,7 @@ class Actions(object):
                 file_correct = site.content_manager.verifyFile(
                     content_inner_path, site.storage.open(content_inner_path, "rb"), ignore_same=False
                 )
-            except Exception, err:
+            except Exception as err:
                 file_correct = False
 
             if file_correct is True:
@@ -291,7 +293,7 @@ class Actions(object):
         result = []
         for row in site.storage.query(query):
             result.append(dict(row))
-        print json.dumps(result, indent=4)
+        print(json.dumps(result, indent=4))
 
     def siteAnnounce(self, address):
         from Site.Site import Site
@@ -303,8 +305,8 @@ class Actions(object):
 
         s = time.time()
         site.announce()
-        print "Response time: %.3fs" % (time.time() - s)
-        print site.peers
+        print("Response time: %.3fs" % (time.time() - s))
+        print(site.peers)
 
     def siteDownload(self, address):
         from Site import Site
@@ -324,15 +326,15 @@ class Actions(object):
             evt.set(True)
 
         site.onComplete.once(lambda: onComplete(on_completed))
-        print "Announcing..."
+        print("Announcing...")
         site.announce()
 
         s = time.time()
-        print "Downloading..."
+        print("Downloading...")
         site.downloadContent("content.json", check_modifications=True)
 
-        print on_completed.get()
-        print "Downloaded in %.3fs" % (time.time()-s)
+        print(on_completed.get())
+        print("Downloaded in %.3fs" % (time.time()-s))
 
 
     def siteNeedFile(self, address, inner_path):
@@ -344,7 +346,7 @@ class Actions(object):
             while 1:
                 s = time.time()
                 time.sleep(1)
-                print "Switch time:", time.time() - s
+                print("Switch time:", time.time() - s)
         gevent.spawn(checker)
 
         logging.info("Opening a simple connection server")
@@ -354,7 +356,7 @@ class Actions(object):
 
         site = Site(address)
         site.announce()
-        print site.needFile(inner_path, update=True)
+        print(site.needFile(inner_path, update=True))
 
     def sitePublish(self, address, peer_ip=None, peer_port=15441, inner_path="content.json", diffs={}):
         global file_server
@@ -410,15 +412,15 @@ class Actions(object):
             import getpass
             privatekey = getpass.getpass("Private key (input hidden):")
 
-        print CryptBitcoin.privatekeyToAddress(privatekey)
+        print(CryptBitcoin.privatekeyToAddress(privatekey))
 
     def cryptSign(self, message, privatekey):
         from Crypt import CryptBitcoin
-        print CryptBitcoin.sign(message, privatekey)
+        print(CryptBitcoin.sign(message, privatekey))
 
     def cryptVerify(self, message, sign, address):
         from Crypt import CryptBitcoin
-        print CryptBitcoin.verify(message, address, sign)
+        print(CryptBitcoin.verify(message, address, sign))
 
     # Peer
     def peerPing(self, peer_ip, peer_port=None):
@@ -435,13 +437,13 @@ class Actions(object):
         logging.info("Pinging 5 times peer: %s:%s..." % (peer_ip, int(peer_port)))
         peer = Peer(peer_ip, peer_port)
         for i in range(5):
-            print "Response time: %.3fs (crypt: %s)" % (peer.ping(), peer.connection.crypt)
+            print("Response time: %.3fs (crypt: %s)" % (peer.ping(), peer.connection.crypt))
             time.sleep(1)
         peer.remove()
-        print "Reconnect test..."
+        print("Reconnect test...")
         peer = Peer(peer_ip, peer_port)
         for i in range(5):
-            print "Response time: %.3fs (crypt: %s)" % (peer.ping(), peer.connection.crypt)
+            print("Response time: %.3fs (crypt: %s)" % (peer.ping(), peer.connection.crypt))
             time.sleep(1)
 
     def peerGetFile(self, peer_ip, peer_port, site, filename, benchmark=False):
@@ -459,10 +461,10 @@ class Actions(object):
         if benchmark:
             for i in range(10):
                 peer.getFile(site, filename),
-            print "Response time: %.3fs" % (time.time() - s)
+            print("Response time: %.3fs" % (time.time() - s))
             raw_input("Check memory")
         else:
-            print peer.getFile(site, filename).read()
+            print(peer.getFile(site, filename).read())
 
     def peerCmd(self, peer_ip, peer_port, cmd, parameters):
         logging.info("Opening a simple connection server")
@@ -482,13 +484,13 @@ class Actions(object):
             parameters = {}
         try:
             res = peer.request(cmd, parameters)
-            print json.dumps(res, indent=2, ensure_ascii=False)
-        except Exception, err:
-            print "Unknown response (%s): %s" % (err, res)
+            print(json.dumps(res, indent=2, ensure_ascii=False))
+        except Exception as err:
+            print("Unknown response (%s): %s" % (err, res))
 
     def getConfig(self):
         import json
-        print json.dumps(config.getServerInfo(), indent=2, ensure_ascii=False)
+        print(json.dumps(config.getServerInfo(), indent=2, ensure_ascii=False))
 
 
 actions = Actions()

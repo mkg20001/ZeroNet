@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import time
 import gevent
 import logging
@@ -48,7 +50,7 @@ def callQueue(event):
 def callAsync(event, allowed_again=10, func=None, *args, **kwargs):
     if isAllowed(event, allowed_again):  # Not called recently, call it now
         called(event)
-        # print "Calling now"
+        # print("Calling now")
         return gevent.spawn(func, *args, **kwargs)
     else:  # Called recently, schedule it for later
         time_left = allowed_again - max(0, time.time() - called_db[event])
@@ -68,12 +70,12 @@ def callAsync(event, allowed_again=10, func=None, *args, **kwargs):
 def call(event, allowed_again=10, func=None, *args, **kwargs):
     if isAllowed(event):  # Not called recently, call it now
         called(event)
-        # print "Calling now", allowed_again
+        # print("Calling now", allowed_again)
         return func(*args, **kwargs)
 
     else:  # Called recently, schedule it for later
         time_left = max(0, allowed_again - (time.time() - called_db[event]))
-        # print "Time left: %s" % time_left, args, kwargs
+        # print("Time left: %s" % time_left, args, kwargs)
         log.debug("Calling sync (%.2fs left): %s" % (time_left, event))
         called(event, time_left)
         time.sleep(time_left)
@@ -100,30 +102,30 @@ if __name__ == "__main__":
     import random
 
     def publish(inner_path):
-        print "Publishing %s..." % inner_path
+        print("Publishing %s..." % inner_path)
         return 1
 
     def cb(thread):
-        print "Value:", thread.value
+        print("Value:", thread.value)
 
-    print "Testing async spam requests rate limit to 1/sec..."
+    print("Testing async spam requests rate limit to 1/sec...")
     for i in range(3000):
         thread = callAsync("publish content.json", 1, publish, "content.json %s" % i)
         time.sleep(float(random.randint(1, 20)) / 100000)
-    print thread.link(cb)
-    print "Done"
+    print(thread.link(cb))
+    print("Done")
 
     time.sleep(2)
 
-    print "Testing sync spam requests rate limit to 1/sec..."
+    print("Testing sync spam requests rate limit to 1/sec...")
     for i in range(5):
         call("publish data.json", 1, publish, "data.json %s" % i)
         time.sleep(float(random.randint(1, 100)) / 100)
-    print "Done"
+    print("Done")
 
-    print "Testing cleanup"
+    print("Testing cleanup")
     thread = callAsync("publish content.json single", 1, publish, "content.json single")
-    print "Needs to cleanup:", called_db, queue_db
-    print "Waiting 3min for cleanup process..."
+    print("Needs to cleanup:", called_db, queue_db)
+    print("Waiting 3min for cleanup process...")
     time.sleep(60 * 3)
-    print "Cleaned up:", called_db, queue_db
+    print("Cleaned up:", called_db, queue_db)

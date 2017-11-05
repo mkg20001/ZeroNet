@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import json
 import re
 import os
@@ -61,4 +63,4 @@ def query(path_pattern, filter):
 
 if __name__ == "__main__":
     for row in list(query("../../data/12Hw8rTgzrNo4DSh2AkqwPRqDyTticwJyH/data/users/*/data.json", "")):
-        print row
+        print(row)

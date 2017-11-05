@@ -198,7 +198,7 @@ class Site(object):
                                 "Patched successfully: %s (diff: %.3fs, verify: %.3fs, write: %.3fs, on_done: %.3fs)" %
                                 (file_inner_path, time_diff, time_verify, time_write, time_on_done)
                             )
-                    except Exception, err:
+                    except Exception as err:
                         self.log.debug("Failed to patch %s: %s" % (file_inner_path, err))
                         diff_success = False
 
@@ -525,7 +525,7 @@ class Site(object):
                         })
                     if result:
                         break
-                except Exception, err:
+                except Exception as err:
                     self.log.error("Publish error: %s" % Debug.formatException(err))
                     result = {"exception": Debug.formatException(err)}
 
@@ -828,7 +828,7 @@ class Site(object):
                 tracker.announce(info_hash=hashlib.sha1(self.address).hexdigest(), num_want=50)
                 back = tracker.poll_once()
                 peers = back["response"]["peers"]
-            except Exception, err:
+            except Exception as err:
                 return False
 
         elif tracker_protocol == "http":  # Http tracker
@@ -861,7 +861,7 @@ class Site(object):
                     peer = peer_data[off:off + 6]
                     addr, port = struct.unpack('!LH', peer)
                     peers.append({"addr": socket.inet_ntoa(struct.pack('!L', addr)), "port": port})
-            except Exception, err:
+            except Exception as err:
                 self.log.debug("Http tracker %s error: %s" % (tracker_address, err))
                 if req:
                     req.close()
